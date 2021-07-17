@@ -1,6 +1,7 @@
 package de.niahealth.patient.survey.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -12,6 +13,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Survey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +35,9 @@ public class Survey {
 
     @CreationTimestamp
     private Date createdAt;
+
+    public Survey(byte lastNightSleep, byte skinCondition) {
+        this.lastNightSleep = lastNightSleep;
+        this.skinCondition = skinCondition;
+    }
 }

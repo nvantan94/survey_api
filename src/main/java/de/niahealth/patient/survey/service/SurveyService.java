@@ -6,5 +6,4 @@ import org.springframework.stereotype.Component;
 @Component
 public interface SurveyService {
     Survey saveSurvey(Survey survey);
-    boolean existsTodaySurvey();
 }
