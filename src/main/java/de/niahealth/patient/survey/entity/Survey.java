@@ -1,5 +1,6 @@
 package de.niahealth.patient.survey.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class Survey {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "patientId", nullable = false)
+    @JsonIgnore
     private Patient patient;
 
     @Column(nullable = false)
