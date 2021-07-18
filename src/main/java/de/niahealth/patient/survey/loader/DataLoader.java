@@ -26,5 +26,9 @@ public class DataLoader implements ApplicationRunner {
                 "bob", passwordEncoder.encode("bob"), "Bob"));
         patientRepository.save(new Patient(
                 "alice", passwordEncoder.encode("alice"), "Alice"));
+        patientRepository.save(new Patient(
+                "duck", passwordEncoder.encode("duck"), "Duck"));
+        patientRepository.save(new Patient(
+                "david", passwordEncoder.encode("david"), "David"));
     }
 }
