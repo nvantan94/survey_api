@@ -43,7 +43,7 @@ public class SurveyControllerIntegrationTest {
     private PatientService patientService;
 
     @Test
-    @DisplayName("Add valid survey")
+    @DisplayName("Test add valid survey")
     public void testAddValidSurveys() throws Exception {
         testAddValidSurvey(new Survey(5, 8), USERNAME_BOB);
         testAddValidSurvey(new Survey(0, 10), USERNAME_ALICE);
@@ -64,7 +64,7 @@ public class SurveyControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Add invalid survey")
+    @DisplayName("Test add invalid survey")
     public void testAddInvalidSurvey() throws Exception {
         String lessThanMinValErrMsg = "must be greater than or equal to 0";
         String moreThanMaxValErrMsg = "must be less than or equal to 10";
@@ -93,7 +93,7 @@ public class SurveyControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Add existing survey")
+    @DisplayName("Test add existing survey")
     public void addExistsSurveyTest() throws Exception {
         addSampleSurvey();
 
