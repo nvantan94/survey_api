@@ -1,13 +1,10 @@
 package de.niahealth.patient.survey.service.impl;
 
-import de.niahealth.patient.survey.entity.Patient;
 import de.niahealth.patient.survey.entity.Survey;
-import de.niahealth.patient.survey.exception.SurveyAlreadyExistsException;
 import de.niahealth.patient.survey.repository.PatientRepository;
 import de.niahealth.patient.survey.repository.SurveyRepository;
 import de.niahealth.patient.survey.service.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
@@ -28,12 +25,12 @@ public class SurveyServiceImpl implements SurveyService {
     @Override
     public Survey saveSurvey(Survey survey) {
         validateSurvey(survey);
-
-        Patient patient = retrievePatient();
-        validateExistsTodaySurvey(patient.getId());
-
-        survey.setPatient(patient);
         return surveyRepository.save(survey);
+    }
+
+    @Override
+    public boolean existsTodaySurvey(long patientId) {
+        return surveyRepository.existsTodaySurvey(patientId);
     }
 
     private void validateSurvey(Survey survey) {
@@ -43,16 +40,6 @@ public class SurveyServiceImpl implements SurveyService {
 
         if (constraintViolations.size() > 0)
             throw new ConstraintViolationException(constraintViolations);
-    }
-
-    private Patient retrievePatient() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return patientRepository.findByUsername(username);
-    }
-
-    private void validateExistsTodaySurvey(long patientId) {
-        if (surveyRepository.existsTodaySurvey(patientId))
-            throw new SurveyAlreadyExistsException();
     }
 
 }
