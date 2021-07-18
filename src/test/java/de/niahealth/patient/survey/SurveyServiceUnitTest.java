@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Survey service unit test")
+@DisplayName("Survey service unit tests")
 public class SurveyServiceUnitTest {
     @Mock
     private SurveyRepository surveyRepository;

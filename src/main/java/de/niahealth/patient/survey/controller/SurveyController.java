@@ -12,11 +12,15 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SurveyController {
-    @Autowired
     private SurveyService surveyService;
+    private PatientService patientService;
 
     @Autowired
-    private PatientService patientService;
+    public SurveyController(SurveyService surveyService,
+                            PatientService patientService) {
+        this.surveyService = surveyService;
+        this.patientService = patientService;
+    }
 
     @RequestMapping(value = Paths.SURVEY_API, method = RequestMethod.POST)
     @ResponseBody
