@@ -42,4 +42,9 @@ public class Survey {
         this.lastNightSleep = lastNightSleep;
         this.skinCondition = skinCondition;
     }
+
+    public Survey(int lastNightSleep, int skinCondition) {
+        this.lastNightSleep = (byte) lastNightSleep;
+        this.skinCondition = (byte) skinCondition;
+    }
 }

@@ -26,8 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DisplayName("Test survey controller")
-public class SurveyControllerTest {
+@DisplayName("Survey controller integration test")
+public class SurveyControllerIntegrationTest {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final static String USERNAME_BOB = "bob";
@@ -45,8 +45,8 @@ public class SurveyControllerTest {
     @Test
     @DisplayName("Add valid survey")
     public void testAddValidSurveys() throws Exception {
-        testAddValidSurvey(new Survey((byte) 5, (byte) 8), USERNAME_BOB);
-        testAddValidSurvey(new Survey((byte) 0, (byte) 10), USERNAME_ALICE);
+        testAddValidSurvey(new Survey(5, 8), USERNAME_BOB);
+        testAddValidSurvey(new Survey(0, 10), USERNAME_ALICE);
     }
 
     private void testAddValidSurvey(Survey survey, String username) throws Exception {
@@ -69,10 +69,10 @@ public class SurveyControllerTest {
         String lessThanMinValErrMsg = "must be greater than or equal to 0";
         String moreThanMaxValErrMsg = "must be less than or equal to 10";
 
-        testAddInvalidSurvey(new Survey((byte) -1, (byte) 8), lessThanMinValErrMsg, null);
-        testAddInvalidSurvey(new Survey((byte) 11, (byte) 8), moreThanMaxValErrMsg, null);
-        testAddInvalidSurvey(new Survey((byte) 3, (byte) -1), null, lessThanMinValErrMsg);
-        testAddInvalidSurvey(new Survey((byte) 12, (byte) 11), null, moreThanMaxValErrMsg);
+        testAddInvalidSurvey(new Survey(-1, 8), lessThanMinValErrMsg, null);
+        testAddInvalidSurvey(new Survey(11, 8), moreThanMaxValErrMsg, null);
+        testAddInvalidSurvey(new Survey(3, -1), null, lessThanMinValErrMsg);
+        testAddInvalidSurvey(new Survey(12, 11), null, moreThanMaxValErrMsg);
     }
 
     private void testAddInvalidSurvey(Survey survey, String lastNightSleepErrMsg,
@@ -97,7 +97,7 @@ public class SurveyControllerTest {
     public void addExistsSurveyTest() throws Exception {
         addSampleSurvey();
 
-        Survey survey = new Survey((byte) 3, (byte) 3);
+        Survey survey = new Survey(3, 3);
         mockMvc.perform(MockMvcRequestBuilders.post(Paths.SURVEY_API)
                 .with(user(USERNAME_DUCK))
                 .content(createSurveyJSONContent(survey))
@@ -109,7 +109,7 @@ public class SurveyControllerTest {
 
     private void addSampleSurvey() {
         var patient = patientService.retrievePatient(USERNAME_DUCK);
-        Survey survey = new Survey((byte) 4, (byte) 8);
+        Survey survey = new Survey(4, 8);
         survey.setPatient(patient);
         surveyService.saveSurvey(survey);
     }
