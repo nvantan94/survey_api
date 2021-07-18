@@ -12,12 +12,13 @@ public class SwaggerConfiguration {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("nia-health-api")
+                .groupName("survey-api")
                 .apiInfo(
                         new ApiInfoBuilder().title("Survey API")
                         .description("Survey API reference for developers")
                         .version("1.0").build()
                 )
+                .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("de.niahealth.patient.survey.controller"))
                 .build();

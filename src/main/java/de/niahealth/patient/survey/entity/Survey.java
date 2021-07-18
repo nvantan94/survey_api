@@ -1,6 +1,8 @@
 package de.niahealth.patient.survey.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +13,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.Date;
 
+@ApiModel("Survey entity")
 @Entity
 @Getter
 @Setter
@@ -28,6 +31,7 @@ public class Survey {
     @Column(nullable = false)
     @Min(value = 0)
     @Max(value = 10)
+    @ApiModelProperty(notes = "How well your last night sleep?", dataType = "integer")
     private byte lastNightSleep;
 
     @Column(nullable = false)
