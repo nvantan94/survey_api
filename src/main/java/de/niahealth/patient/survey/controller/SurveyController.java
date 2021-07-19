@@ -15,6 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
+
+/**
+ * A controller class contains a restful API for submitting daily health survey.
+ */
 @OpenAPIDefinition(
     info = @Info(
         title = "Survey controller",
@@ -34,6 +39,16 @@ public class SurveyController {
         this.patientService = patientService;
     }
 
+    /**
+     * The API for adding a new survey with method POST.
+     *
+     * @param surveyDTOReq the survey user wants to add.
+     * @return inserted survey
+     * @throws ConstraintViolationException
+     *          with status code 400 if any fields in survey is wrong
+     * @throws SurveyAlreadyExistsException
+     *          with status code 409 if a survey has already added today
+     */
     @Operation(
         summary = "Add a daily survey, you can only add one survey a day.",
         responses = {
