@@ -27,9 +27,9 @@ Api /survey is secured by HTTP basic authentication. You can use any users below
 # Getting Started
 The application provides a restful api to fill survey as below:
 
-1) url: "<server>:<port>/survey", method: POST.
+1) url: "<server>:<port>/survey", method: POST. Request body: a survey like this {"lastNightSleep": 3, "skinCondition": 5}
 
-	Add a survey for today, you have to be authenticated before using this api. Please understand that you can only add **one survey** each day.
+	Add a survey for today, you have to be **authenticated** before using this api. Please understand that you can only add **one survey** each day.
 	
 **Note**: all the time shown in survey is written in UTC/GMT+0.
 
@@ -40,8 +40,6 @@ The application provides a restful api to fill survey as below:
 
 + Java 11
 + Apache Maven 3.6.1
-
-You also need a tool to create HTTP requests to the application as Postman.
  
 2) Running the tests
 To run the test cases of project, using the following command in project root:
@@ -60,4 +58,6 @@ The application will run on port 8080 by default. If you want to change that (fo
 mvn spring-boot:run -Dserver.port=8081
 ```
 
-Now, you can use Postman or any tool to make requests to the application for testing.
+Now, you can use Postman or go to http://localhost:8080/swagger-ui.html to make requests to the application for testing.
+
+If you want to take a look at database, you can go to http://localhost:8080/h2-console/ and then enter url/user/password as jdbc:h2:mem:patientdb/sa/<empty>.
