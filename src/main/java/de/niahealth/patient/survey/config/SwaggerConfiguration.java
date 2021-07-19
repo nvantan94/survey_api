@@ -18,6 +18,7 @@ public class SwaggerConfiguration {
                         .description("Survey API reference for developers")
                         .version("1.0").build()
                 )
+                .directModelSubstitute(Byte.class, Integer.class)
                 .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("de.niahealth.patient.survey.controller"))

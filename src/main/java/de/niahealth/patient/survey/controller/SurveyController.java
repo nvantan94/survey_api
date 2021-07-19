@@ -39,7 +39,8 @@ public class SurveyController {
         responses = {
             @ApiResponse(responseCode = "200", description = "Inserted Successfully Survey."),
             @ApiResponse(responseCode = "401", description = "You are not authenticated."),
-            @ApiResponse(responseCode = "400", description = "Your survey data is wrong or you have already added one today.")
+            @ApiResponse(responseCode = "400", description = "Your survey fields are in wrong value."),
+            @ApiResponse(responseCode = "409", description = "You already added a survey today.")
         }
     )
     @RequestMapping(value = Paths.SURVEY_API, method = RequestMethod.POST)

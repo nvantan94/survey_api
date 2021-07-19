@@ -2,6 +2,7 @@ package de.niahealth.patient.survey.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,16 +28,19 @@ public class Survey {
     @JsonIgnore
     private Patient patient;
 
+    @ApiModelProperty(value = "last night sleep", example = "5")
     @Column(nullable = false)
     @Min(value = 0)
     @Max(value = 10)
-    private byte lastNightSleep;
+    private Byte lastNightSleep;
 
+    @ApiModelProperty(value = "skin condition", example = "10")
     @Column(nullable = false)
     @Min(value = 0)
     @Max(value = 10)
-    private byte skinCondition;
+    private Byte skinCondition;
 
+    @ApiModelProperty(value = "creation time")
     @CreationTimestamp
     private Date createdAt;
 
