@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * An entity for storing information related to a patient.
+ */
 @Entity
 @Getter
 @Setter

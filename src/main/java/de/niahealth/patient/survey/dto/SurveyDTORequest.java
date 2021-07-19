@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A data transfer object that holds survey data in http request.
+ */
 @ApiModel(value = "Survey request")
 @Getter
 @Setter
