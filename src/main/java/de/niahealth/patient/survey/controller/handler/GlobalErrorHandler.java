@@ -11,6 +11,10 @@ import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This handler handles exceptions thrown by controllers.
+ * Then, based on the type of the exception, the corresponding http error response is returned.
+ */
 @ControllerAdvice
 public class GlobalErrorHandler {
     @ExceptionHandler(ConstraintViolationException.class)
