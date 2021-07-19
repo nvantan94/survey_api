@@ -1,6 +1,7 @@
 package de.niahealth.patient.survey;
 
 import de.niahealth.patient.survey.constant.Paths;
+import de.niahealth.patient.survey.dto.SurveyDTORequest;
 import de.niahealth.patient.survey.entity.Survey;
 import de.niahealth.patient.survey.service.PatientService;
 import de.niahealth.patient.survey.service.SurveyService;
@@ -11,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
@@ -45,20 +45,20 @@ public class SurveyControllerIntegrationTest {
     @Test
     @DisplayName("Test add valid survey")
     public void testAddValidSurveys() throws Exception {
-        testAddValidSurvey(new Survey(5, 8), USERNAME_BOB);
-        testAddValidSurvey(new Survey(0, 10), USERNAME_ALICE);
+        testAddValidSurvey(new SurveyDTORequest(5, 8), USERNAME_BOB);
+        testAddValidSurvey(new SurveyDTORequest(0, 10), USERNAME_ALICE);
     }
 
-    private void testAddValidSurvey(Survey survey, String username) throws Exception {
+    private void testAddValidSurvey(SurveyDTORequest surveyDTOReq, String username) throws Exception {
         String today = DATE_FORMATTER.format(LocalDateTime.now(ZoneOffset.UTC));
         mockMvc.perform(MockMvcRequestBuilders.post(Paths.SURVEY_API)
                 .with(user(username))
-                .content(createSurveyJSONContent(survey))
+                .content(createSurveyDTOReqJSONContent(surveyDTOReq))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.lastNightSleep", is((int)survey.getLastNightSleep())))
-                .andExpect(jsonPath("$.skinCondition", is((int)survey.getSkinCondition())))
+                .andExpect(jsonPath("$.lastNightSleep", is((int)surveyDTOReq.getLastNightSleep())))
+                .andExpect(jsonPath("$.skinCondition", is((int)surveyDTOReq.getSkinCondition())))
                 .andExpect(jsonPath("$.createdAt", startsWith(today)))
                 .andReturn();
     }
@@ -69,17 +69,17 @@ public class SurveyControllerIntegrationTest {
         String lessThanMinValErrMsg = "must be greater than or equal to 0";
         String moreThanMaxValErrMsg = "must be less than or equal to 10";
 
-        testAddInvalidSurvey(new Survey(-1, 8), lessThanMinValErrMsg, null);
-        testAddInvalidSurvey(new Survey(11, 8), moreThanMaxValErrMsg, null);
-        testAddInvalidSurvey(new Survey(3, -1), null, lessThanMinValErrMsg);
-        testAddInvalidSurvey(new Survey(12, 11), null, moreThanMaxValErrMsg);
+        testAddInvalidSurvey(new SurveyDTORequest(-1, 8), lessThanMinValErrMsg, null);
+        testAddInvalidSurvey(new SurveyDTORequest(11, 8), moreThanMaxValErrMsg, null);
+        testAddInvalidSurvey(new SurveyDTORequest(3, -1), null, lessThanMinValErrMsg);
+        testAddInvalidSurvey(new SurveyDTORequest(12, 11), null, moreThanMaxValErrMsg);
     }
 
-    private void testAddInvalidSurvey(Survey survey, String lastNightSleepErrMsg,
+    private void testAddInvalidSurvey(SurveyDTORequest surveyDTOReq, String lastNightSleepErrMsg,
                                       String skinConditionErrMsg) throws Exception {
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders.post(Paths.SURVEY_API)
+        var actions = mockMvc.perform(MockMvcRequestBuilders.post(Paths.SURVEY_API)
                 .with(user(USERNAME_DAVID))
-                .content(createSurveyJSONContent(survey))
+                .content(createSurveyDTOReqJSONContent(surveyDTOReq))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -97,10 +97,10 @@ public class SurveyControllerIntegrationTest {
     public void addExistsSurveyTest() throws Exception {
         addSampleSurvey();
 
-        Survey survey = new Survey(3, 3);
+        var surveyDTOReq = new SurveyDTORequest(3, 3);
         mockMvc.perform(MockMvcRequestBuilders.post(Paths.SURVEY_API)
                 .with(user(USERNAME_DUCK))
-                .content(createSurveyJSONContent(survey))
+                .content(createSurveyDTOReqJSONContent(surveyDTOReq))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict())
@@ -109,13 +109,13 @@ public class SurveyControllerIntegrationTest {
 
     private void addSampleSurvey() {
         var patient = patientService.retrievePatient(USERNAME_DUCK);
-        Survey survey = new Survey(4, 8);
+        var survey = new Survey(4, 8);
         survey.setPatient(patient);
         surveyService.saveSurvey(survey);
     }
 
-    private String createSurveyJSONContent(Survey survey) {
+    private String createSurveyDTOReqJSONContent(SurveyDTORequest surveyDTOReq) {
         return String.format("{\"lastNightSleep\": %d, \"skinCondition\": %d }",
-                survey.getLastNightSleep(), survey.getSkinCondition());
+                surveyDTOReq.getLastNightSleep(), surveyDTOReq.getSkinCondition());
     }
 }

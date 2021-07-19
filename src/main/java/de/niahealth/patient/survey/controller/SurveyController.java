@@ -1,6 +1,7 @@
 package de.niahealth.patient.survey.controller;
 
 import de.niahealth.patient.survey.constant.Paths;
+import de.niahealth.patient.survey.dto.SurveyDTORequest;
 import de.niahealth.patient.survey.entity.Patient;
 import de.niahealth.patient.survey.entity.Survey;
 import de.niahealth.patient.survey.exception.SurveyAlreadyExistsException;
@@ -43,12 +44,13 @@ public class SurveyController {
     )
     @RequestMapping(value = Paths.SURVEY_API, method = RequestMethod.POST)
     @ResponseBody
-    public Survey addSurvey(@RequestBody Survey survey) {
+    public Survey addSurvey(@RequestBody SurveyDTORequest surveyDTOReq) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Patient patient = patientService.retrievePatient(username);
 
         validateExistsTodaySurvey(patient.getId());
 
+        var survey = new Survey(surveyDTOReq.getLastNightSleep(), surveyDTOReq.getSkinCondition());
         survey.setPatient(patient);
         return surveyService.saveSurvey(survey);
     }

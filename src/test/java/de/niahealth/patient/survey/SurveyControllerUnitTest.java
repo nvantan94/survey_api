@@ -1,6 +1,7 @@
 package de.niahealth.patient.survey;
 
 import de.niahealth.patient.survey.controller.SurveyController;
+import de.niahealth.patient.survey.dto.SurveyDTORequest;
 import de.niahealth.patient.survey.entity.Patient;
 import de.niahealth.patient.survey.entity.Survey;
 import de.niahealth.patient.survey.exception.SurveyAlreadyExistsException;
@@ -10,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
@@ -20,6 +24,7 @@ import javax.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,14 +41,18 @@ public class SurveyControllerUnitTest {
     @Mock
     private SecurityContext securityContext;
 
+    @InjectMocks
     private SurveyController surveyController;
+
+    @Captor
+    ArgumentCaptor<Survey> surveyCaptor;
+
     private Patient patient = new Patient();
-    private Survey survey = new Survey(3, 5);
+    private SurveyDTORequest surveyDTOReq = new SurveyDTORequest(3, 5);
+    private Survey survey = new Survey(surveyDTOReq.getLastNightSleep(), surveyDTOReq.getSkinCondition());
 
     @BeforeEach
     public void init() {
-        surveyController = new SurveyController(surveyService, patientService);
-
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         when(SecurityContextHolder.getContext().getAuthentication().getName()).thenReturn(USERNAME_BOB);
@@ -56,11 +65,11 @@ public class SurveyControllerUnitTest {
     @DisplayName("test add valid survey")
     public void testAddValidSurvey() {
         when(surveyService.existsTodaySurvey(patient.getId())).thenReturn(false);
-        when(surveyService.saveSurvey(survey)).thenReturn(survey);
+        when(surveyService.saveSurvey(any(Survey.class))).thenReturn(survey);
 
-        var insertedSurvey = surveyController.addSurvey(survey);
+        var insertedSurvey = surveyController.addSurvey(surveyDTOReq);
 
-        verify(surveyService).saveSurvey(survey);
+        verify(surveyService).saveSurvey(surveyCaptor.capture());
         verify(surveyService).existsTodaySurvey(patient.getId());
         verify(patientService).retrievePatient(USERNAME_BOB);
 
@@ -72,9 +81,9 @@ public class SurveyControllerUnitTest {
     @DisplayName("test add invalid survey")
     public void testAddInvalidSurvey() {
         when(surveyService.existsTodaySurvey(patient.getId())).thenReturn(false);
-        when(surveyService.saveSurvey(survey)).thenThrow(ConstraintViolationException.class);
+        when(surveyService.saveSurvey(any(Survey.class))).thenThrow(ConstraintViolationException.class);
 
-        assertThrows(ConstraintViolationException.class, () -> surveyController.addSurvey(survey));
+        assertThrows(ConstraintViolationException.class, () -> surveyController.addSurvey(surveyDTOReq));
     }
 
     @Test
@@ -83,6 +92,6 @@ public class SurveyControllerUnitTest {
         when(patientService.retrievePatient(USERNAME_BOB)).thenReturn(patient);
         when(surveyService.existsTodaySurvey(patient.getId())).thenReturn(true);
 
-        assertThrows(SurveyAlreadyExistsException.class, () -> surveyController.addSurvey(survey));
+        assertThrows(SurveyAlreadyExistsException.class, () -> surveyController.addSurvey(surveyDTOReq));
     }
 }
