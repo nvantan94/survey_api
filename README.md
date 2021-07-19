@@ -12,6 +12,7 @@ This project implements an application which allows patients update their situat
 + Spring starter Security 2.5.2
 + Spring starter test 2.5.2 (including Junit 5)
 + H2 embedded database
++ Swagger 2
 + Lombok
 
 #Authentication
