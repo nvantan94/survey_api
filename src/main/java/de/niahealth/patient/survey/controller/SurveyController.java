@@ -6,15 +6,21 @@ import de.niahealth.patient.survey.entity.Survey;
 import de.niahealth.patient.survey.exception.SurveyAlreadyExistsException;
 import de.niahealth.patient.survey.service.PatientService;
 import de.niahealth.patient.survey.service.SurveyService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@Api(value = "Survey controller", description = "Contains api for adding daily survey.")
+@OpenAPIDefinition(
+    info = @Info(
+        title = "Survey controller",
+        version = "1.0",
+        description = "Contains api for adding daily survey."
+    )
+)
 @RestController
 public class SurveyController {
     private SurveyService surveyService;
@@ -27,12 +33,14 @@ public class SurveyController {
         this.patientService = patientService;
     }
 
-    @ApiOperation(value = "Add a daily survey, you can only add one survey a day.", response = Survey.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully added survey"),
-            @ApiResponse(code = 401, message = "You are not authenticated."),
-            @ApiResponse(code = 400, message = "Your survey data is wrong or you have already added one today.")
-    })
+    @Operation(
+        summary = "Add a daily survey, you can only add one survey a day.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Inserted Successfully Survey."),
+            @ApiResponse(responseCode = "401", description = "You are not authenticated."),
+            @ApiResponse(responseCode = "400", description = "Your survey data is wrong or you have already added one today.")
+        }
+    )
     @RequestMapping(value = Paths.SURVEY_API, method = RequestMethod.POST)
     @ResponseBody
     public Survey addSurvey(@RequestBody Survey survey) {
