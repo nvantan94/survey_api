@@ -13,6 +13,25 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.Date;
 
+/**
+ * An entity for storing information related to a survey.
+ * A survey contains the following fields:
+ *
+ * <p>
+ * - <tt>id</tt>: unique id for each survey.
+ *
+ * <p>
+ * - <tt>patient</tt>: the patient that this survey belongs to.
+ *
+ * <p>
+ * - <tt>lastNightSleep</tt>: how was the patient sleep last night?
+ *
+ * <p>
+ * - <tt>skinCondition</tt>: skin condition of patient.
+ *
+ * <p>
+ * - <tt>createdAt</tt>: creation time of this survey.
+ */
 @ApiModel("Survey entity")
 @Entity
 @Getter
